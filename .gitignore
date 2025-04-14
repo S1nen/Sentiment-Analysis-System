@@ -1,0 +1,33 @@
+# Virtual environment
+venv/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+
+# Jupyter notebook autosaves
+.ipynb_checkpoints/
+
+# Environment/config files with sensitive info
+.env
+config.json
+credentials.json
+
+# Machine Learning model files (optional)
+*.pkl
+*.joblib
+*.h5
+
+# VS Code/editor-specific files
+.vscode/
+*.code-workspace
+
+# Large datasets (optional, only if not needed in repo)
+*.csv
+*.tsv
+*.xlsx
+*.json
+
+# MacOS/Windows hidden files (safe to ignore)
+.DS_Store
+Thumbs.db
