@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import GridSearchCV
-from xgboost import XGBClassifier
+from sklearn.metrics import classification_report
 
 rfc=RandomForestClassifier()
 rfc.fit(x_train_scaled,y_train)
@@ -44,14 +44,25 @@ gridsearch=GridSearchCV(estimator=rfc,param_grid=parameters,cv=cv_object,verbose
 gridsearch.fit(x_train_scaled,y_train.ravel())
 print("Best parameters",gridsearch.best_params_)
 
-#found best parameters are {'bootstrap': True, 'max_depth': 50, 'min_samples_split': 8, 'n_estimators': 30}
+#found best parameters are {'bootstrap': True, 'max_depth': 40, 'min_samples_split': 12, 'n_estimators': 70}
 
-#training with the best params
+#training with the best params-
 
-best_rfc=RandomForestClassifier(bootstrap=True,max_depth=50,min_samples_split=8,n_estimators=30)
+best_rfc=RandomForestClassifier(bootstrap=True,max_depth=40,min_samples_split=12,n_estimators=70,random_state=42,class_weight='balanced')
 best_rfc.fit(x_train_scaled,y_train)
 y_pred2=best_rfc.predict(x_test_scaled)
-print("accuracy on training data:",best_rfc.score(x_train_scaled,y_train))
-print("accuracy on test data:",best_rfc.score(x_test_scaled,y_test))
+print("accuracy on training data after parameter tuning:",best_rfc.score(x_train_scaled,y_train))
+print("accuracy on test data after parameter tuning:",best_rfc.score(x_test_scaled,y_test))
 
-#found accurcay on trainng data-
+#found accurcay on training data after parameter tuning-0.95
+#found accuracy on test data after parameter tuning-0.92
+
+y_pred2=best_rfc.predict(x_test_scaled)
+cm2=confusion_matrix(y_test,y_pred2)
+
+cmdisplay2=ConfusionMatrixDisplay(confusion_matrix=cm2,display_labels=best_rfc.classes_)
+cmdisplay2.plot()
+plt.show()
+
+print("classification report:",classification_report(y_test,y_pred2))
+
