@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Sentiment Analysis</h2>
+        <form method="POST" action="/predict">
+            <textarea name="review" placeholder="Enter your review here" required>{{ review if review else '' }}</textarea>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result">
+            <h3>The given review is: 
+                <span class="{{ 'positive' if prediction == 'positive' else 'negative' }}">
+                    {{ prediction }}
+                </span>
+            </h3>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

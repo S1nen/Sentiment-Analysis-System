@@ -6,6 +6,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
+from xgboost import XGBClassifier
+import pickle
 
 rfc=RandomForestClassifier()
 rfc.fit(x_train_scaled,y_train)
@@ -32,11 +34,12 @@ print("standard variance:",accuracy.std())
 
 #grid search for best parameters in random forest
 
+
 parameters={
     'bootstrap':[True],
-    'max_depth':[20,40],
-    'min_samples_split':[8,12],
-    'n_estimators':[30,70]
+    'max_depth':[10,20,30,40,50],
+    'min_samples_split':[4,6,8,12,14],
+    'n_estimators':[20,30,40,60,70]
 }
 
 cv_object=StratifiedKFold(n_splits=2)
@@ -44,18 +47,18 @@ gridsearch=GridSearchCV(estimator=rfc,param_grid=parameters,cv=cv_object,verbose
 gridsearch.fit(x_train_scaled,y_train.ravel())
 print("Best parameters",gridsearch.best_params_)
 
-#found best parameters are {'bootstrap': True, 'max_depth': 40, 'min_samples_split': 12, 'n_estimators': 70}
+#found best parameters are {'bootstrap': True, 'max_depth': 40, 'min_samples_split': 8, 'n_estimators': 70}
 
 #training with the best params-
 
-best_rfc=RandomForestClassifier(bootstrap=True,max_depth=40,min_samples_split=12,n_estimators=70,random_state=42,class_weight='balanced')
+best_rfc=RandomForestClassifier(bootstrap=True,max_depth=40,min_samples_split=8,n_estimators=70,random_state=42,class_weight='balanced')
 best_rfc.fit(x_train_scaled,y_train)
 y_pred2=best_rfc.predict(x_test_scaled)
 print("accuracy on training data after parameter tuning:",best_rfc.score(x_train_scaled,y_train))
 print("accuracy on test data after parameter tuning:",best_rfc.score(x_test_scaled,y_test))
 
-#found accurcay on training data after parameter tuning-0.95
-#found accuracy on test data after parameter tuning-0.92
+#found accurcay on training data after parameter tuning-0.92
+#found accuracy on test data after parameter tuning-0.93
 
 y_pred2=best_rfc.predict(x_test_scaled)
 cm2=confusion_matrix(y_test,y_pred2)
@@ -66,3 +69,4 @@ plt.show()
 
 print("classification report:",classification_report(y_test,y_pred2))
 
+pickle.dump(best_rfc,open("models/rfc_model.pkl","wb"))
