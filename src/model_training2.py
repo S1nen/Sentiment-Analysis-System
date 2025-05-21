@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier 
 import pickle
 
 xgb_model=XGBClassifier()
